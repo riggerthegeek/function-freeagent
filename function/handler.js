@@ -11,6 +11,10 @@ const yml = require('js-yaml');
 const FreeAgent = require('./freeagent');
 
 const config = {
+  baseUrl: process.env.BASE_URL,
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  userAgent: 'OpenFAAS-freeagent'
 };
 
 module.exports = input => Promise
@@ -19,11 +23,9 @@ module.exports = input => Promise
     /* JSON is valid YAML */
     const inputArgs = yml.safeLoad(input);
 
-    const { args = '', method, refreshToken } = inputArgs;
+    const { args = [], method, refreshToken } = inputArgs;
 
-    const opts = yml.safeLoad(args);
+    const fa = new FreeAgent(config, refreshToken);
 
-    const fa = new FreeAgent();
-
-    return fa[method](opts);
+    return fa[method](...args);
   });
