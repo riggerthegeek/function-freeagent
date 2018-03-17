@@ -14,7 +14,7 @@ const FreeAgent = require('./freeagent');
 function secretOrEnvvar (secretFile, envvar) {
   let value;
   try {
-    value = fs.readFileSync(secretFile);
+    value = fs.readFileSync(secretFile, 'utf8');
   } catch (err) {
     value = process.env[envvar];
   }
