@@ -3,6 +3,7 @@
  */
 
 /* Node modules */
+const fs = require('fs');
 
 /* Third-party modules */
 const yml = require('js-yaml');
@@ -10,10 +11,21 @@ const yml = require('js-yaml');
 /* Files */
 const FreeAgent = require('./freeagent');
 
+function secretOrEnvvar (secretFile, envvar) {
+  let value;
+  try {
+    value = fs.readFileSync(secretFile);
+  } catch (err) {
+    value = process.env[envvar];
+  }
+
+  return value;
+}
+
 const config = {
   baseUrl: process.env.BASE_URL,
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
+  clientId: secretOrEnvvar('/run/secrets/freeagent_client_id', 'CLIENT_ID'),
+  clientSecret: secretOrEnvvar('/run/secrets/freeagent_client_secret', 'CLIENT_SECRET'),
   userAgent: 'OpenFAAS-freeagent'
 };
 
