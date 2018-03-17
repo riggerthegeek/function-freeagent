@@ -1,6 +1,6 @@
 {
   "name": "function-freeagent",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OpenFaaS tasks for accessing FreeAgent",
   "main": "./function/handler.js",
   "scripts": {
