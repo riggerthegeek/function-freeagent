@@ -31,14 +31,14 @@ module.exports = class FreeAgent {
    * @returns {*}
    * @private
    */
-  _call(params, token = null) {
+  _call (params, token = null) {
     const opts = _.defaultsDeep(params, {
       baseUrl: this.config.baseUrl,
       headers: {
-        'user-agent': this.config.userAgent,
+        'user-agent': this.config.userAgent
       },
       json: true,
-      method: 'GET',
+      method: 'GET'
     });
 
     if (token) {
@@ -59,7 +59,7 @@ module.exports = class FreeAgent {
    * @returns {Promise<string>}
    * @private
    */
-  _exchangeRefreshToken(token = '') {
+  _exchangeRefreshToken (token = '') {
     return Promise.resolve()
       .then(() => {
         if (token) {
@@ -71,14 +71,14 @@ module.exports = class FreeAgent {
         const opts = {
           auth: {
             user: this.config.clientId,
-            pass: this.config.clientSecret,
+            pass: this.config.clientSecret
           },
           body: {
             grant_type: 'refresh_token',
-            refresh_token: this.config.refreshToken,
+            refresh_token: this.config.refreshToken
           },
           method: 'POST',
-          url: '/v2/token_endpoint',
+          url: '/v2/token_endpoint'
         };
 
         return this._call(opts);
@@ -96,7 +96,7 @@ module.exports = class FreeAgent {
    * @param {string} token
    * @returns {Promise<*>}
    */
-  addExpense(expense = {}, token = '') {
+  addExpense (expense = {}, token = '') {
     return this._exchangeRefreshToken(token)
       .then(refreshToken => Promise
         .resolve()
@@ -116,7 +116,7 @@ module.exports = class FreeAgent {
 
           const opts = {
             body: {
-              expense,
+              expense
             },
             method: 'POST',
             url: '/v2/expenses'
@@ -135,7 +135,7 @@ module.exports = class FreeAgent {
    * @param {string} token
    * @returns {Promise<{user:*}>}
    */
-  getCurrentUser(token = '') {
+  getCurrentUser (token = '') {
     return this._exchangeRefreshToken(token)
       .then(refreshToken => {
         const opts = {
