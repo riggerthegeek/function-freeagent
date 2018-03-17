@@ -52,6 +52,7 @@ serve:
 	docker run \
 		-v ${PWD}/function:/home/node/function \
 		-v ${PWD}/node_modules:/home/node_modules \
+		-e "BASE_URL=${BASE_URL}" \
 		-e "CLIENT_ID=${CLIENT_ID}" \
 		-e "CLIENT_SECRET=${CLIENT_SECRET}" \
 		-it --rm \
