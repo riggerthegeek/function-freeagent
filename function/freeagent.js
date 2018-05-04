@@ -6,6 +6,7 @@
 
 /* Third-party modules */
 const { _ } = require('lodash');
+const dayjs = require('dayjs');
 const request = require('request-promise-native');
 
 /* Files */
@@ -143,6 +144,41 @@ module.exports = class FreeAgent {
         };
 
         return this._call(opts, refreshToken);
+      });
+  }
+
+  /**
+   * Upload Bank Statement
+   *
+   * Takes the data, converts it into a CSV and
+   * uploads it to the given bank account
+   *
+   * @param {string} bankAccount
+   * @param {{date: Date, amount: Number, description: string}[]} data
+   * @param {string} token
+   * @returns {Promise<string>}
+   */
+  uploadBankStatement (bankAccount, data, token = '') {
+    return this._exchangeRefreshToken(token)
+      .then(refreshToken => {
+        const statement = data.map(({ date, amount, description }) => {
+          const dateFormatted = dayjs(date)
+            .format('DD/MM/YYYY');
+
+          return `"${dateFormatted}","${amount}","${description}"`;
+        }).join('\n');
+
+        const opts = {
+          body: {
+            statement
+          },
+          method: 'POST',
+          url: `/v2/bank_transactions/statement?bank_account=${bankAccount}`
+        };
+
+        return this._call(opts, refreshToken)
+          /* FreeAgent returns undefined */
+          .then(() => 'success');
       });
   }
 };
